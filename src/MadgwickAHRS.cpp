@@ -13,6 +13,7 @@
 // 29/09/2011	SOH Madgwick    Initial release
 // 02/10/2011	SOH Madgwick	Optimised for reduced CPU load
 // 19/02/2012	SOH Madgwick	Magnetometer measurement is normalised
+// 17/08/2017 KD Hansen     Change interface to accept rad/s instead of deg/s
 //
 //=============================================================================================
 
@@ -57,11 +58,6 @@ void Madgwick::update(float gx, float gy, float gz, float ax, float ay, float az
 		updateIMU(gx, gy, gz, ax, ay, az);
 		return;
 	}
-
-	// Convert gyroscope degrees/sec to radians/sec
-	gx *= 0.0174533f;
-	gy *= 0.0174533f;
-	gz *= 0.0174533f;
 
 	// Rate of change of quaternion from gyroscope
 	qDot1 = 0.5f * (-q1 * gx - q2 * gy - q3 * gz);
@@ -156,11 +152,6 @@ void Madgwick::updateIMU(float gx, float gy, float gz, float ax, float ay, float
 	float qDot1, qDot2, qDot3, qDot4;
 	float _2q0, _2q1, _2q2, _2q3, _4q0, _4q1, _4q2 ,_8q1, _8q2, q0q0, q1q1, q2q2, q3q3;
 
-	// Convert gyroscope degrees/sec to radians/sec
-	gx *= 0.0174533f;
-	gy *= 0.0174533f;
-	gz *= 0.0174533f;
-
 	// Rate of change of quaternion from gyroscope
 	qDot1 = 0.5f * (-q1 * gx - q2 * gy - q3 * gz);
 	qDot2 = 0.5f * (q0 * gx + q2 * gz - q3 * gy);
@@ -248,4 +239,3 @@ void Madgwick::computeAngles()
 	yaw = atan2f(q1*q2 + q0*q3, 0.5f - q2*q2 - q3*q3);
 	anglesComputed = 1;
 }
-
