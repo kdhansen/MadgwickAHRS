@@ -24,14 +24,11 @@ class Madgwick{
 private:
     static float invSqrt(float x);
     float beta;				// algorithm gain
-    float q0;
-    float q1;
-    float q2;
-    float q3;	// quaternion of sensor frame relative to auxiliary frame
+    float q0, q1, q2, q3;	// quaternion of sensor frame relative to auxiliary frame
+    float qDot0, qDot1, qDot2, qDot3; // rate of change in quaternion
     float invSampleFreq;
-    float roll;
-    float pitch;
-    float yaw;
+    float roll, pitch, yaw; // Orientation in rpy
+    float roll_vel, pitch_vel, yaw_vel; // Angular velocity in rpy
     char anglesComputed;
     void computeAngles();
 
@@ -69,6 +66,29 @@ public:
         if (!anglesComputed) computeAngles();
         return yaw;
     }
+    float getRollVel() {
+        if (!anglesComputed) computeAngles();
+        return roll_vel * 57.29578f;
+    }
+    float getPitchVel() {
+        if (!anglesComputed) computeAngles();
+        return pitch_vel * 57.29578f;
+    }
+    float getYawVel() {
+        if (!anglesComputed) computeAngles();
+        return yaw_vel * 57.29578f + 180.0f;
+    }
+    float getRollVelRadians() {
+        if (!anglesComputed) computeAngles();
+        return roll_vel;
+    }
+    float getPitchVelRadians() {
+        if (!anglesComputed) computeAngles();
+        return pitch_vel;
+    }
+    float getYawVelRadians() {
+        if (!anglesComputed) computeAngles();
+        return yaw_vel;
+    }
 };
 #endif
-
